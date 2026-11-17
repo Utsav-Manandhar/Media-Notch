@@ -92,7 +92,8 @@ struct NotchView: View {
                 (Text(track.title).bold() + Text("  " + track.artist).foregroundColor(.secondary))
                     .lineLimit(1)
                     .truncationMode(.tail) // long names end in "…"
-                    .padding(.horizontal, 38) // same gap both sides: artwork on the left, settings button on the right
+                    .padding(.leading, 38) // clear of the artwork
+                    .padding(.trailing, 24) // the gear ends 36 pt from the island edge; leave a ~6 pt gap
             }
             HStack(spacing: 30) {
                 control("backward.fill", "Previous track", SpotifyScript.previous)
