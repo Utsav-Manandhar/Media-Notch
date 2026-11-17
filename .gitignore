@@ -1,5 +1,18 @@
+# SwiftPM / Xcode
 .build/
-.DS_Store
+.swiftpm/
+*.xcodeproj/xcuserdata/
 xcuserdata/
 DerivedData/
-.swiftpm/
+
+# Built app and installers
+*.app
+*.dmg
+*.zip
+
+# macOS
+.DS_Store
+
+# Local tooling
+.claude/
+.env
