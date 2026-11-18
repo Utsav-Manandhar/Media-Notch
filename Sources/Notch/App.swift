@@ -71,13 +71,22 @@ final class Island: NSObject {
         panel.close()
     }
 
+    /// The island opens only if the cursor stays this long, so passing through on the way to a tab does nothing.
+    private static let hoverDelay = 0.3
+    private var pendingOpen: DispatchWorkItem?
+
     @objc(mouseEntered:) func mouseEntered(with event: NSEvent) {
-        panel.setFrame(layout.frame(expanded: true, in: screenFrame), display: true)
-        player.refresh() // resync the progress bar
-        state.expanded = true
+        let open = DispatchWorkItem { [self] in
+            panel.setFrame(layout.frame(expanded: true, in: screenFrame), display: true)
+            player.refresh() // resync the progress bar
+            state.expanded = true
+        }
+        pendingOpen = open
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.hoverDelay, execute: open)
     }
 
     @objc(mouseExited:) func mouseExited(with event: NSEvent) {
+        pendingOpen?.cancel() // left before the delay ran out
         state.expanded = false
         // Shrink the window only after the collapse animation, so it isn't cut off.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [self] in
